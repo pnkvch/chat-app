@@ -1,20 +1,12 @@
 import React from "react";
+import Message from "./Message";
 
-const MessagesList = props => {
-  return (
-    <div className="message-list">
-      {props.messages.map((message, index) => {
-        return (
-          <div key={index} className="message">
-            <div className="message-username">{message.senderId}</div>
-            <div className="message-text">
-              {message.parts[0].payload.content}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+const MessagesList = ({ messages }) => {
+  const messagesList = messages.map((item, index) => {
+    return <Message index={index} message={item} />;
+  });
+
+  return <div className="message-list">{messagesList}</div>;
 };
 
 export default MessagesList;
