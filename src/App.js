@@ -3,8 +3,8 @@ import { ChatManager, TokenProvider } from "@pusher/chatkit-client";
 
 import "./App.css";
 import Roomlist from "./components/Roomlist";
-import MessadgesList from "./components/MessadgesList";
-import SendMessadgeForm from "./components/SendMessadgeForm";
+import MessagesList from "./components/MessagesList";
+import SendMessageForm from "./components/SendMessageForm";
 import NewRoomForm from "./components/NewRoomFrom";
 import { instanceLocator, tokenUrl } from "./config";
 
@@ -34,8 +34,8 @@ function App() {
   return (
     <div className="app">
       <Roomlist />
-      <MessadgesList messages={messages} />
-      <SendMessadgeForm />
+      <MessagesList messages={messages} />
+      <SendMessageForm />
       <NewRoomForm />
     </div>
   );

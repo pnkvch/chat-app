@@ -1,6 +1,6 @@
 import React from "react";
 
-const MessadgesList = props => {
+const MessagesList = props => {
   return (
     <div className="message-list">
       {props.messages.map((message, index) => {
@@ -17,4 +17,4 @@ const MessadgesList = props => {
   );
 };
 
-export default MessadgesList;
+export default MessagesList;
