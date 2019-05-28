@@ -1,8 +1,8 @@
 import React from "react";
 
-const Message = ({ index, message }) => {
+const Message = ({ message }) => {
   return (
-    <div key={index} className="message">
+    <div className="message">
       <div className="message-username">{message.senderId}</div>
       <div className="message-text">{message.parts[0].payload.content}</div>
     </div>

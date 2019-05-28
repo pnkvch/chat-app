@@ -10,6 +10,7 @@ import { instanceLocator, tokenUrl } from "./config";
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const chatManager = new ChatManager({
@@ -20,22 +21,37 @@ function App() {
       })
     });
 
-    chatManager.connect().then(currentUser => {
-      currentUser.subscribeToRoomMultipart({
-        roomId: "21245599",
-        hooks: {
-          onMessage: message => {
-            setMessages(currentMessages => [...currentMessages, message]);
+    chatManager
+      .connect()
+      .then(currentUser => {
+        setUser(currentUser);
+
+        user.subscribeToRoomMultipart({
+          roomId: "21245599",
+          hooks: {
+            onMessage: message => {
+              setMessages(currentMessages => [...currentMessages, message]);
+            }
           }
-        }
+        });
+      })
+      .catch(err => {
+        return `Error: ${err}`;
       });
+  }, [user]);
+
+  const sendMessage = text => {
+    user.sendSimpleMessage({
+      text,
+      roomId: "21245599"
     });
-  }, []);
+  };
+
   return (
     <div className="app">
       <Roomlist />
       <MessagesList messages={messages} />
-      <SendMessageForm />
+      <SendMessageForm sendMessage={sendMessage} />
       <NewRoomForm />
     </div>
   );
