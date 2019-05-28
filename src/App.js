@@ -11,6 +11,8 @@ import { instanceLocator, tokenUrl } from "./config";
 function App() {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState(null);
+  const [joinableRooms, setJoinableRooms] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
     const chatManager = new ChatManager({
@@ -26,7 +28,16 @@ function App() {
       .then(currentUser => {
         setUser(currentUser);
 
-        user.subscribeToRoomMultipart({
+        currentUser
+          .getJoinableRooms()
+          .then(rooms => {
+            setJoinableRooms(prevRooms => [...prevRooms, rooms]);
+            setRooms(currentUser.rooms);
+          })
+          .catch(err => {
+            console.log(`Error on getting the rooms: ${err}`);
+          });
+        currentUser.subscribeToRoomMultipart({
           roomId: "21245599",
           hooks: {
             onMessage: message => {
@@ -36,9 +47,9 @@ function App() {
         });
       })
       .catch(err => {
-        return `Error: ${err}`;
+        console.log(`Connecting error: ${err}`);
       });
-  }, [user]);
+  }, []);
 
   const sendMessage = text => {
     user.sendSimpleMessage({
@@ -49,7 +60,7 @@ function App() {
 
   return (
     <div className="app">
-      <Roomlist />
+      <Roomlist rooms={[...rooms, ...joinableRooms]} />
       <MessagesList messages={messages} />
       <SendMessageForm sendMessage={sendMessage} />
       <NewRoomForm />
