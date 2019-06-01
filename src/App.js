@@ -10,7 +10,7 @@ import { instanceLocator, tokenUrl } from "./config";
 
 function App() {
   const [messages, setMessages] = useState([]);
-  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
   const [joinableRooms, setJoinableRooms] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [roomID, setRoomID] = useState(null);
@@ -27,7 +27,7 @@ function App() {
     chatManager
       .connect()
       .then(currentUser => {
-        setUser(currentUser);
+        setUserInfo(currentUser);
         getRooms(currentUser);
       })
       .catch(err => {
@@ -37,7 +37,7 @@ function App() {
   }, []);
 
   const sendMessage = text => {
-    user.sendSimpleMessage({
+    userInfo.sendSimpleMessage({
       text,
       roomId: roomID
     });
@@ -58,7 +58,7 @@ function App() {
   const subscribeToRoom = roomId => {
     setMessages([]);
 
-    user
+    userInfo
       .subscribeToRoomMultipart({
         roomId: roomId,
         hooks: {
@@ -69,6 +69,7 @@ function App() {
       })
       .then(room => {
         setRoomID(room.id);
+        getRooms(userInfo);
       });
   };
 
