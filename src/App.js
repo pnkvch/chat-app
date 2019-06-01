@@ -13,6 +13,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [joinableRooms, setJoinableRooms] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [roomID, setRoomID] = useState(null);
 
   useEffect(() => {
     const chatManager = new ChatManager({
@@ -27,40 +28,56 @@ function App() {
       .connect()
       .then(currentUser => {
         setUser(currentUser);
-
-        currentUser
-          .getJoinableRooms()
-          .then(rooms => {
-            setJoinableRooms(prevRooms => [...prevRooms, rooms]);
-            setRooms(currentUser.rooms);
-          })
-          .catch(err => {
-            console.log(`Error on getting the rooms: ${err}`);
-          });
-        currentUser.subscribeToRoomMultipart({
-          roomId: "21245599",
-          hooks: {
-            onMessage: message => {
-              setMessages(currentMessages => [...currentMessages, message]);
-            }
-          }
-        });
+        getRooms(currentUser);
       })
       .catch(err => {
         console.log(`Connecting error: ${err}`);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sendMessage = text => {
     user.sendSimpleMessage({
       text,
-      roomId: "21245599"
+      roomId: roomID
     });
+  };
+
+  const getRooms = user => {
+    user
+      .getJoinableRooms()
+      .then(rooms => {
+        setJoinableRooms(prevRooms => [...prevRooms, rooms]);
+        setRooms(user.rooms);
+      })
+      .catch(err => {
+        console.log(`Error on getting the rooms: ${err}`);
+      });
+  };
+
+  const subscribeToRoom = roomId => {
+    setMessages([]);
+
+    user
+      .subscribeToRoomMultipart({
+        roomId: roomId,
+        hooks: {
+          onMessage: message => {
+            setMessages(currentMessages => [...currentMessages, message]);
+          }
+        }
+      })
+      .then(room => {
+        setRoomID(room.id);
+      });
   };
 
   return (
     <div className="app">
-      <Roomlist rooms={[...rooms, ...joinableRooms]} />
+      <Roomlist
+        rooms={[...rooms, ...joinableRooms]}
+        subscribeToRoom={subscribeToRoom}
+      />
       <MessagesList messages={messages} />
       <SendMessageForm sendMessage={sendMessage} />
       <NewRoomForm />

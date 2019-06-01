@@ -1,6 +1,6 @@
 import React from "react";
 
-const Roomlist = ({ rooms }) => {
+const Roomlist = ({ rooms, subscribeToRoom }) => {
   return (
     <div className="rooms-list">
       <h1>Your rooms:</h1>
@@ -8,7 +8,9 @@ const Roomlist = ({ rooms }) => {
         {rooms.map(room => {
           return (
             <li key={room.id} className="room">
-              <a href="#">{room.name}</a>
+              <a onClick={() => subscribeToRoom(room.id)} href="#">
+                {room.name}
+              </a>
             </li>
           );
         })}
