@@ -6,11 +6,12 @@ const Roomlist = ({ rooms, subscribeToRoom }) => {
       <h1>Your rooms:</h1>
       <ul>
         {rooms.map(room => {
+          console.log(room);
           return (
             <li key={room.id} className="room">
-              <a onClick={() => subscribeToRoom(room.id)} href="#">
+              <button onClick={() => subscribeToRoom(room.id)}>
                 {room.name}
-              </a>
+              </button>
             </li>
           );
         })}

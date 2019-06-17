@@ -33,7 +33,6 @@ function App() {
       .catch(err => {
         console.log(`Connecting error: ${err}`);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sendMessage = text => {
@@ -58,6 +57,8 @@ function App() {
   const subscribeToRoom = roomId => {
     setMessages([]);
 
+    console.log(joinableRooms);
+
     userInfo
       .subscribeToRoomMultipart({
         roomId: roomId,
@@ -75,10 +76,7 @@ function App() {
 
   return (
     <div className="app">
-      <Roomlist
-        rooms={[...rooms, ...joinableRooms]}
-        subscribeToRoom={subscribeToRoom}
-      />
+      <Roomlist rooms={[...rooms]} subscribeToRoom={subscribeToRoom} />
       <MessagesList messages={messages} />
       <SendMessageForm sendMessage={sendMessage} />
       <NewRoomForm />
