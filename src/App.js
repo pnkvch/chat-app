@@ -7,8 +7,7 @@ import MessagesList from "./components/MessagesList";
 import SendMessageForm from "./components/SendMessageForm";
 import NewRoomForm from "./components/NewRoomFrom";
 import { instanceLocator, tokenUrl } from "./config";
-
-function App() {
+const App = () => {
   const [messages, setMessages] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [joinableRooms, setJoinableRooms] = useState([]);
@@ -31,7 +30,7 @@ function App() {
         getRooms(currentUser);
       })
       .catch(err => {
-        console.log(`Connecting error: ${err}`);
+        console.log(`Connection error: ${err}`);
       });
   }, []);
 
@@ -74,14 +73,23 @@ function App() {
       });
   };
 
+  const createRoom = name => {
+    userInfo
+      .createRoom({
+        name
+      })
+      .then(room => subscribeToRoom(room.id))
+      .catch(err => console.log("Error on connecting to the new room:", err));
+  };
+
   return (
     <div className="app">
       <Roomlist rooms={[...rooms]} subscribeToRoom={subscribeToRoom} />
-      <MessagesList messages={messages} />
-      <SendMessageForm sendMessage={sendMessage} />
-      <NewRoomForm />
+      <MessagesList roomID={roomID} messages={messages} />
+      <SendMessageForm disabled={!roomID} sendMessage={sendMessage} />
+      <NewRoomForm createRoom={createRoom} />
     </div>
   );
-}
+};
 
 export default App;

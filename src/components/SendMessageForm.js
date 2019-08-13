@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SendMessadgeForm = ({ sendMessage }) => {
+const SendMessadgeForm = ({ sendMessage, disabled }) => {
   const [value, setValue] = useState("");
 
   const handleChange = e => {
@@ -16,6 +16,7 @@ const SendMessadgeForm = ({ sendMessage }) => {
   return (
     <form onSubmit={handleSubmit} className="send-message-form">
       <input
+        disabled={disabled}
         placeholder="Type your message here and press Enter to send it"
         type="text"
         value={value}
